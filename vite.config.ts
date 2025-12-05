@@ -4,6 +4,7 @@ import readableClassnames from 'vite-plugin-readable-classnames';
 import sassDts from 'vite-plugin-sass-dts';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
+import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -27,5 +28,10 @@ export default defineConfig({
   },
   server: {
     open: true,
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
   },
 });
