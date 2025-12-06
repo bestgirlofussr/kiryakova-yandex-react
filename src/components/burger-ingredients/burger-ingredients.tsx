@@ -115,7 +115,7 @@ export const BurgerIngredients = ({
                       {renderCounter(getIngredientCount(item._id))}
                       <img
                         src={item.image}
-                        alt={`${item.name} - изображение ингредиента`}
+                        alt={`${item.name}.`}
                         className={`${styles.image} mb-1`}
                       />
                       <Price className="mb-1" cost={item.price} />

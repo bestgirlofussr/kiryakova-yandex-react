@@ -12,7 +12,7 @@ export const IngredientDetails: React.FC<IngredientDetailsProps> = ({ ingredient
     <div className={styles.ingredient_details}>
       <img
         src={ingredient.image_large}
-        alt={`[${ingredient.name}- крупное изображение ингредиента`}
+        alt={`${ingredient.name}.`}
         className={`${styles.image} mb-4`}
       />
       <p className={`${styles.name} text text_type_main-medium mb-8`}>

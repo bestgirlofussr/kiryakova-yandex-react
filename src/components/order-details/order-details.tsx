@@ -8,7 +8,7 @@ export const OrderDetails: React.FC = () => {
       <p className="text text_type_main-medium mb-15">идентификатор заказа</p>
       <img
         src={donePng}
-        alt="Галочка успешного заказа"
+        alt="Галочка успешного заказа."
         className={`${styles.image} mb-15`}
       />
       <p className="text text_type_main-default mb-2">Ваш заказ начали готовить</p>
