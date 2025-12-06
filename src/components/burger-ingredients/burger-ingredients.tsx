@@ -2,6 +2,8 @@ import { Price } from '@/components/ui/price/price';
 import { Counter, Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useState, useMemo, useCallback } from 'react';
 
+import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
+import { Modal } from '@components/modal/modal';
 import {
   type TIngredient,
   type IngredientType,
@@ -22,9 +24,11 @@ type TBurgerIngredientsProps = {
 export const BurgerIngredients = ({
   ingredients,
   selectedIngredients,
-  addIngredient,
+  //addIngredient,
 }: TBurgerIngredientsProps): React.JSX.Element => {
   const [selectedType, setSelectedType] = useState<IngredientType>(INGREDIENT_TYPES.BUN);
+  const [selectedIngredient, setSelectedIngredient] = useState<TIngredient | null>(null);
+
   const ingredientTabs: {
     name: string;
     type: IngredientType;
@@ -77,51 +81,62 @@ export const BurgerIngredients = ({
   }, []);
 
   return (
-    <section className={styles.burger_ingredients}>
-      <nav className="mb-10">
-        <ul className={styles.menu}>
-          {ingredientTabs.map((tab) => (
-            <Tab
-              key={tab.order}
-              value={tab.type}
-              active={tab.type === selectedType}
-              onClick={() => selectMenu(tab.type)}
-            >
-              {tab.name}
-            </Tab>
-          ))}
-        </ul>
-      </nav>
-      <div className={styles.ingredients_container}>
-        <div className={styles.ingredients_wrapper}>
-          {sortedGroups.map((tab) => (
-            <div key={tab.order} className="mb-10">
-              <h2 id={`menu_${tab.type}`} className="text text_type_main-medium mb-6">
+    <>
+      <section className={styles.burger_ingredients}>
+        <nav className="mb-10">
+          <ul className={styles.menu}>
+            {ingredientTabs.map((tab) => (
+              <Tab
+                key={tab.order}
+                value={tab.type}
+                active={tab.type === selectedType}
+                onClick={() => selectMenu(tab.type)}
+              >
                 {tab.name}
-              </h2>
-              <div className={styles.ingredients}>
-                {tab.items.map((item) => (
-                  <div
-                    key={item._id}
-                    className={styles.ingredient}
-                    onClick={() => addIngredient(item)}
-                    role="button"
-                  >
-                    {renderCounter(getIngredientCount(item._id))}
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className={`${styles.image} mb-1`}
-                    />
-                    <Price className="mb-1" cost={item.price} />
-                    <div className="text text_type_main-default">{item.name}</div>
-                  </div>
-                ))}
+              </Tab>
+            ))}
+          </ul>
+        </nav>
+        <div className={styles.ingredients_container}>
+          <div className={styles.ingredients_wrapper}>
+            {sortedGroups.map((tab) => (
+              <div key={tab.order} className="mb-10">
+                <h2 id={`menu_${tab.type}`} className="text text_type_main-medium mb-6">
+                  {tab.name}
+                </h2>
+                <div className={styles.ingredients}>
+                  {tab.items.map((item) => (
+                    <div
+                      key={item._id}
+                      className={styles.ingredient}
+                      onClick={() => setSelectedIngredient(item)}
+                      role="button"
+                    >
+                      {renderCounter(getIngredientCount(item._id))}
+                      <img
+                        src={item.image}
+                        alt={`${item.name} - изображение ингредиента`}
+                        className={`${styles.image} mb-1`}
+                      />
+                      <Price className="mb-1" cost={item.price} />
+                      <div className="text text_type_main-default">{item.name}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+      {!!selectedIngredient && (
+        <Modal
+          header="Детали ингредиента"
+          isOpen={!!selectedIngredient}
+          onClose={() => setSelectedIngredient(null)}
+        >
+          <IngredientDetails ingredient={selectedIngredient} />
+        </Modal>
+      )}
+    </>
   );
 };

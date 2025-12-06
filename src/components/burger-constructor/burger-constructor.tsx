@@ -6,7 +6,7 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import { useMemo, useState } from 'react';
 
-import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
+import { Modal } from '@components/modal/modal';
 import { OrderDetails } from '@components/order-details/order-details';
 import { INGREDIENT_TYPES, type TIngredient, type WithUniqueId } from '@utils/types';
 
@@ -22,7 +22,6 @@ export const BurgerConstructor = ({
   deleteIngredient,
 }: TBurgerConstructorProps): React.JSX.Element => {
   const [createOrderModalIsOpen, setCreateOrderModalIsOpen] = useState(false);
-  const [selectedIngredient, setSelectedIngredient] = useState<TIngredient | null>(null);
 
   const bun = useMemo(
     () => selectedIngredients.find((it) => it.type == INGREDIENT_TYPES.BUN),
@@ -64,19 +63,14 @@ export const BurgerConstructor = ({
       <div className={`${styles.ingredients_container} mb-10 pl-4`}>
         {!!bun && (
           <>
-            <div
-              className={styles.ingredient_wrapper}
-              onClick={() => setSelectedIngredient(bun)}
-            >
-              <ConstructorElement
-                extraClass={`${styles.ingredient} mr-4 mb-4 ml-8`}
-                type="top"
-                isLocked={true}
-                text={`${bun.name} (верх)`}
-                price={bun.price}
-                thumbnail={bun.image_mobile}
-              />
-            </div>
+            <ConstructorElement
+              extraClass={`${styles.ingredient} mr-4 mb-4 ml-8`}
+              type="top"
+              isLocked={true}
+              text={`${bun.name} (верх)`}
+              price={bun.price}
+              thumbnail={bun.image_mobile}
+            />
             <div className={`${styles.ingredients_wrapper} pr-4`}>
               {sortedIngredients.map((ingredient) => (
                 <div
@@ -84,35 +78,26 @@ export const BurgerConstructor = ({
                   key={ingredient.uniqueId}
                 >
                   <DragIcon type="secondary" />
-                  <div
-                    className={styles.ingredient_wrapper}
-                    onClick={() => setSelectedIngredient(ingredient)}
-                  >
-                    <ConstructorElement
-                      extraClass={`${styles.ingredient} ml-2`}
-                      text={ingredient.name}
-                      price={ingredient.price}
-                      thumbnail={ingredient.image_mobile}
-                      handleClose={handleDelete(ingredient.uniqueId) as () => void}
-                    />
-                  </div>
+
+                  <ConstructorElement
+                    extraClass={`${styles.ingredient} ml-2`}
+                    text={ingredient.name}
+                    price={ingredient.price}
+                    thumbnail={ingredient.image_mobile}
+                    handleClose={handleDelete(ingredient.uniqueId) as () => void}
+                  />
                 </div>
               ))}
             </div>
 
-            <div
-              className={styles.ingredient_wrapper}
-              onClick={() => setSelectedIngredient(bun)}
-            >
-              <ConstructorElement
-                extraClass={`${styles.ingredient} ml-8 mr-4`}
-                type="bottom"
-                isLocked={true}
-                text={`${bun.name} (низ)`}
-                price={bun.price}
-                thumbnail={bun.image_mobile}
-              />
-            </div>
+            <ConstructorElement
+              extraClass={`${styles.ingredient} ml-8 mr-4`}
+              type="bottom"
+              isLocked={true}
+              text={`${bun.name} (низ)`}
+              price={bun.price}
+              thumbnail={bun.image_mobile}
+            />
           </>
         )}
       </div>
@@ -125,17 +110,12 @@ export const BurgerConstructor = ({
         </Button>
       </div>
       {createOrderModalIsOpen && (
-        <OrderDetails
+        <Modal
           isOpen={createOrderModalIsOpen}
           onClose={() => setCreateOrderModalIsOpen(false)}
-        />
-      )}
-
-      {!!selectedIngredient && (
-        <IngredientDetails
-          onClose={() => setSelectedIngredient(null)}
-          ingredient={selectedIngredient}
-        />
+        >
+          <OrderDetails />
+        </Modal>
       )}
     </section>
   );

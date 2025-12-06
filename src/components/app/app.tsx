@@ -45,6 +45,14 @@ export const App = (): React.JSX.Element => {
         setLoading(true);
         const data = await fetchIngredients();
         setIngredients(data);
+
+        // TODO: при следующей итерации убрать
+        setSelectedIngredients(
+          data.map((ingredient) => ({
+            ...ingredient,
+            uniqueId: `${ingredient._id}-${performance.now()}`,
+          }))
+        );
       } catch (err: unknown) {
         setError(err instanceof Error ? err : new Error('Неизвестная ошибка'));
       } finally {

@@ -22,11 +22,6 @@
   overflow: hidden auto;
 }
 
-.ingredient_wrapper {
-  width: 100%;
-  cursor: pointer;
-}
-
 .ingredient_drag {
   display: flex;
   align-items: center;
