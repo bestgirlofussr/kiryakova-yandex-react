@@ -12,3 +12,13 @@ export type TIngredient = {
   image_mobile: string;
   __v: number;
 };
+
+export type WithUniqueId<T> = T & { uniqueId: string };
+
+export const INGREDIENT_TYPES = {
+  BUN: 'bun' as const,
+  SAUCE: 'sauce' as const,
+  MAIN: 'main' as const,
+} as const;
+
+export type IngredientType = (typeof INGREDIENT_TYPES)[keyof typeof INGREDIENT_TYPES];
