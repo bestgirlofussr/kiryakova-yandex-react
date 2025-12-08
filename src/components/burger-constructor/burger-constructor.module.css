@@ -16,15 +16,19 @@
 }
 
 .ingredients_wrapper {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
+  padding-left: 0;
   overflow: hidden auto;
+  scroll-snap-type: y mandatory;
 }
 
 .ingredient_drag {
   display: flex;
   align-items: center;
+  scroll-snap-align: start;
+}
+
+.ingredient_drag:last-child {
+  margin-bottom: 0;
 }
 
 .ingredient {

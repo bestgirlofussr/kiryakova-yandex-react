@@ -64,16 +64,16 @@ export const BurgerConstructor = ({
         {!!bun && (
           <>
             <ConstructorElement
-              extraClass={`${styles.ingredient} mr-4 mb-4 ml-8`}
+              extraClass={`${styles.ingredient} mr-4 ml-8`}
               type="top"
               isLocked={true}
               text={`${bun.name} (верх)`}
               price={bun.price}
               thumbnail={bun.image_mobile}
             />
-            <div className={`${styles.ingredients_wrapper} pr-4`}>
+            <ul className={`${styles.ingredients_wrapper} pr-4`}>
               {sortedIngredients.map((ingredient) => (
-                <div
+                <li
                   className={`${styles.ingredient_drag} mb-4`}
                   key={ingredient.uniqueId}
                 >
@@ -86,9 +86,9 @@ export const BurgerConstructor = ({
                     thumbnail={ingredient.image_mobile}
                     handleClose={handleDelete(ingredient.uniqueId) as () => void}
                   />
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
 
             <ConstructorElement
               extraClass={`${styles.ingredient} ml-8 mr-4`}
