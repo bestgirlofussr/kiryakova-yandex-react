@@ -37,6 +37,7 @@ export const orderSlice = createSlice({
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.loading = false;
+        state.order = null;
         state.error = new Error(action.error?.message ?? 'Неизвестная ошибка');
       })
       .addCase(createOrder.fulfilled, (state, action) => {

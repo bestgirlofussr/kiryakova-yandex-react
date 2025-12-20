@@ -37,6 +37,7 @@ export const ingredientsSlice = createSlice({
       })
       .addCase(fetchIngredients.rejected, (state, action) => {
         state.loading = false;
+        state.ingredients = [];
         state.error = new Error(action.error?.message ?? 'Неизвестная ошибка');
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
