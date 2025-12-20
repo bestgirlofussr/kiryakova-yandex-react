@@ -1,33 +1,28 @@
-import { Price } from '@/components/ui/price/price';
-import { Counter, Tab } from '@krgaa/react-developer-burger-ui-components';
-import { useState, useMemo, useCallback } from 'react';
+import { Tab } from '@krgaa/react-developer-burger-ui-components';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 
+import { BurgerIngredient } from '@components/burger-ingredient/burger-ingredient';
 import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
 import { Modal } from '@components/modal/modal';
 import {
-  type TIngredient,
-  type IngredientType,
-  type WithUniqueId,
-  INGREDIENT_TYPES,
-} from '@utils/types';
+  getSelectedIngredient,
+  resetSelectedIngredient,
+} from '@services/burger-ingredient/reducer';
+import { getIngredients } from '@services/burger-ingredients/reducer';
+import { useAppDispatch, useAppSelector } from '@services/store';
+import { type IngredientType, INGREDIENT_TYPES } from '@utils/types';
 
 import type React from 'react';
 
 import styles from './burger-ingredients.module.css';
 
-type TBurgerIngredientsProps = {
-  ingredients: TIngredient[];
-  selectedIngredients: WithUniqueId<TIngredient>[];
-  addIngredient: (ingredient: TIngredient) => void;
-};
-
-export const BurgerIngredients = ({
-  ingredients,
-  selectedIngredients,
-  //addIngredient,
-}: TBurgerIngredientsProps): React.JSX.Element => {
+export const BurgerIngredients = (): React.JSX.Element => {
   const [selectedType, setSelectedType] = useState<IngredientType>(INGREDIENT_TYPES.BUN);
-  const [selectedIngredient, setSelectedIngredient] = useState<TIngredient | null>(null);
+
+  const ingredients = useAppSelector(getIngredients);
+  const selectedIngredient = useAppSelector(getSelectedIngredient);
+
+  const dispatch = useAppDispatch();
 
   const ingredientTabs: {
     name: string;
@@ -69,15 +64,34 @@ export const BurgerIngredients = ({
     element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
-  const getIngredientCount = useCallback(
-    (ingredientId: string) => {
-      return selectedIngredients.filter((item) => item._id === ingredientId).length;
-    },
-    [selectedIngredients]
-  );
+  const ingredientsRef = useRef<HTMLDivElement>(null);
+  const headerRefs = useRef<Record<string, HTMLHeadingElement | null>>({});
 
-  const renderCounter = useCallback((count: number) => {
-    return count > 0 ? <Counter count={count} /> : null;
+  useEffect(() => {
+    const container = ingredientsRef.current;
+    if (!container) return;
+
+    const handleScroll = (): void => {
+      const headers = Array.from(Object.values(headerRefs.current));
+
+      if (headers.length === 0) return;
+
+      const containerTop = container.getBoundingClientRect().top;
+
+      const closest = headers.reduce(
+        (closest, header) =>
+          Math.abs(header!.getBoundingClientRect().top - containerTop) <
+          Math.abs(closest!.getBoundingClientRect().top - containerTop)
+            ? header
+            : closest,
+        headers[0]
+      );
+
+      setSelectedType(closest!.id.replace('menu_', '') as IngredientType);
+    };
+    container.addEventListener('scroll', handleScroll);
+
+    return (): void => container.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
@@ -98,29 +112,21 @@ export const BurgerIngredients = ({
           </ul>
         </nav>
         <div className={styles.ingredients_container}>
-          <div className={styles.ingredients_wrapper}>
+          <div className={styles.ingredients_wrapper} ref={ingredientsRef}>
             {sortedGroups.map((tab) => (
               <div key={tab.order} className="mb-10">
-                <h2 id={`menu_${tab.type}`} className="text text_type_main-medium mb-6">
+                <h2
+                  ref={(el) => {
+                    headerRefs.current[tab.type] = el;
+                  }}
+                  id={`menu_${tab.type}`}
+                  className="text text_type_main-medium mb-6"
+                >
                   {tab.name}
                 </h2>
                 <div className={styles.ingredients}>
                   {tab.items.map((item) => (
-                    <div
-                      key={item._id}
-                      className={styles.ingredient}
-                      onClick={() => setSelectedIngredient(item)}
-                      role="button"
-                    >
-                      {renderCounter(getIngredientCount(item._id))}
-                      <img
-                        src={item.image}
-                        alt={`${item.name}.`}
-                        className={`${styles.image} mb-1`}
-                      />
-                      <Price className="mb-1" cost={item.price} />
-                      <div className="text text_type_main-default">{item.name}</div>
-                    </div>
+                    <BurgerIngredient key={item._id} item={item} />
                   ))}
                 </div>
               </div>
@@ -132,7 +138,7 @@ export const BurgerIngredients = ({
         <Modal
           header="Детали ингредиента"
           isOpen={!!selectedIngredient}
-          onClose={() => setSelectedIngredient(null)}
+          onClose={() => dispatch(resetSelectedIngredient())}
         >
           <IngredientDetails ingredient={selectedIngredient} />
         </Modal>

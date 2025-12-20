@@ -1,0 +1,22 @@
+.ingredient {
+  max-height: 80px;
+  background-color: #1c1c21;
+}
+
+.ingredient_drag {
+  display: flex;
+  align-items: center;
+  scroll-snap-align: start;
+}
+
+.ingredient_drag:last-child {
+  margin-bottom: 0;
+}
+
+.hover {
+  opacity: 0.8;
+}
+
+.dragging {
+  opacity: 0.5;
+}

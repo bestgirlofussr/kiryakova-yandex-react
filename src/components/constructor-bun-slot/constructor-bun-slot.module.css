@@ -1,0 +1,25 @@
+.bun_top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+  margin-right: 16px;
+  margin-left: 32px;
+  background-color: #1c1c21;
+  border-radius: 88px 88px 40px 40px;
+}
+
+.bun_bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+  margin-right: 16px;
+  margin-left: 32px;
+  background-color: #1c1c21;
+  border-radius: 40px 40px 88px 88px;
+}
+
+.drop_target {
+  border: 1px solid #4c4cff33;
+}

@@ -1,0 +1,15 @@
+.ingredient {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  cursor: pointer;
+}
+
+.image {
+  margin: 0 auto;
+}
+
+.dragging {
+  opacity: 0.5;
+}

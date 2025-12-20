@@ -15,20 +15,10 @@
   overflow: hidden;
 }
 
-.ingredients_wrapper {
-  padding-left: 0;
-  overflow: hidden auto;
-  scroll-snap-type: y mandatory;
-}
-
-.ingredient_drag {
+.order_cost {
   display: flex;
+  justify-content: end;
   align-items: center;
-  scroll-snap-align: start;
-}
-
-.ingredient_drag:last-child {
-  margin-bottom: 0;
 }
 
 .ingredient {
@@ -36,8 +26,9 @@
   background-color: #1c1c21;
 }
 
-.order_cost {
+.error {
   display: flex;
-  justify-content: end;
+  justify-content: center;
   align-items: center;
+  background-color: #1c1c21;
 }
