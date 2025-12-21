@@ -1,14 +1,23 @@
-import { Button } from '@krgaa/react-developer-burger-ui-components';
-import { useMemo } from 'react';
+import { Button, Preloader } from '@krgaa/react-developer-burger-ui-components';
+import { useCallback, useMemo } from 'react';
 
 import { ConstructorBunSlot } from '@components/constructor-bun-slot/constructor-bun-slot';
 import { ConstructorIngredients } from '@components/constructor-ingredients/constructor-ingredients';
 import { Modal } from '@components/modal/modal';
 import { OrderDetails } from '@components/order-details/order-details';
 import { Price } from '@components/ui/price/price';
-import { getBun, getIngredients } from '@services/burger-constructor/reducer';
+import {
+  getBun,
+  getIngredients,
+  resetConstructor,
+} from '@services/burger-constructor/reducer';
 import { createOrder } from '@services/order/actions';
-import { getError, getOrderDetails, resetOrderDetails } from '@services/order/reducer';
+import {
+  getError,
+  getLoading,
+  getOrderDetails,
+  resetOrderDetails,
+} from '@services/order/reducer';
 import { useAppDispatch, useAppSelector } from '@services/store';
 import { INGREDIENT_TYPES } from '@utils/types';
 
@@ -18,6 +27,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
   const bun = useAppSelector(getBun);
   const selectedIngredients = useAppSelector(getIngredients);
   const order = useAppSelector(getOrderDetails);
+  const loading = useAppSelector(getLoading);
   const error = useAppSelector(getError);
 
   const dispatch = useAppDispatch();
@@ -34,18 +44,21 @@ export const BurgerConstructor = (): React.JSX.Element => {
     );
   }, [selectedIngredients, bun]);
 
-  const sendOrder = (): void => {
-    if (!bun) return;
+  const sendOrder = useCallback(async () => {
+    if (!bun || loading) return;
     const ingredientsIds = [
       bun._id, // Булка сверху
       ...selectedIngredients.map((it) => it._id),
       bun._id, // Булка снизу
     ];
 
-    void dispatch(createOrder({ ingredients: ingredientsIds }));
-  };
+    await dispatch(createOrder({ ingredients: ingredientsIds }));
+    dispatch(resetConstructor());
+  }, [bun, loading, selectedIngredients]);
 
-  return (
+  return loading ? (
+    <Preloader />
+  ) : (
     <section className={styles.burger_constructor}>
       <div className={`${styles.ingredients_container} mb-10 pl-4`}>
         <ConstructorBunSlot
@@ -67,7 +80,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
       <div className={`${styles.order_cost} pl-4 pr-4`}>
         <Price className="mr-10" cost={orderCost} size="medium" />
 
-        <Button onClick={sendOrder} htmlType="button" disabled={!canOrder}>
+        <Button onClick={() => void sendOrder()} htmlType="button" disabled={!canOrder}>
           Оформить заказ
         </Button>
       </div>

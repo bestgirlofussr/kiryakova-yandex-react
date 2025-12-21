@@ -56,10 +56,18 @@ export const constructorSlice = createSlice({
       ingredients.splice(toIndex, 0, movedIngredient);
       state.ingredients = ingredients;
     },
+    resetConstructor: (state) => {
+      Object.assign(state, initialState);
+    },
   },
 });
 
 export const { getIngredients, getBun } = constructorSlice.selectors;
 
-export const { setBun, addIngredient, deleteIngredient, moveIngredient } =
-  constructorSlice.actions;
+export const {
+  setBun,
+  addIngredient,
+  deleteIngredient,
+  moveIngredient,
+  resetConstructor,
+} = constructorSlice.actions;

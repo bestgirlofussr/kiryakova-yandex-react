@@ -22,6 +22,7 @@ export const orderSlice = createSlice({
   selectors: {
     getOrderDetails: (state) => state.order,
     getError: (state) => state.error,
+    getLoading: (state) => state.loading,
   },
   reducers: {
     resetOrderDetails: (state) => {
@@ -48,6 +49,6 @@ export const orderSlice = createSlice({
   },
 });
 
-export const { getOrderDetails, getError } = orderSlice.selectors;
+export const { getOrderDetails, getError, getLoading } = orderSlice.selectors;
 
 export const { resetOrderDetails } = orderSlice.actions;

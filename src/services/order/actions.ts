@@ -1,5 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
+import { request } from '@utils/request';
+
 import type { Order } from '@utils/types';
 
 type OrderRequest = {
@@ -16,9 +18,7 @@ export const createOrder = createAsyncThunk<Order, OrderRequest>(
   'order/createOrder',
   async (orderData) => {
     try {
-      const url = new URL('orders', import.meta.env.VITE_API_URL).toString();
-
-      const response = await fetch(url, {
+      const response = await request<OrderResponse>('orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,12 +26,7 @@ export const createOrder = createAsyncThunk<Order, OrderRequest>(
         body: JSON.stringify(orderData),
       });
 
-      if (!response.ok) {
-        throw new Error(`Ошибка ${response.status}`);
-      }
-
-      const parsedResponse = (await response.json()) as OrderResponse;
-      return { ...parsedResponse.order, name: parsedResponse.name };
+      return { ...response.order, name: response.name };
     } catch (error) {
       console.error('Fetch ошибка:', error);
       throw error;
