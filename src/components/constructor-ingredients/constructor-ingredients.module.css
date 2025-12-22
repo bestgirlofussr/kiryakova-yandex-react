@@ -1,0 +1,23 @@
+.ingredients_wrapper {
+  padding-left: 0;
+  overflow: hidden auto;
+  scroll-snap-type: y mandatory;
+}
+
+.ingredient_placeholer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+  margin-left: 32px;
+  background-color: #1c1c21;
+  border-radius: 40px;
+}
+
+.ingredients_drop {
+  opacity: 0.5;
+}
+
+.placeholder_drop {
+  border: 1px solid #4c4cff33;
+}

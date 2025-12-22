@@ -22,3 +22,8 @@ export const INGREDIENT_TYPES = {
 } as const;
 
 export type IngredientType = (typeof INGREDIENT_TYPES)[keyof typeof INGREDIENT_TYPES];
+
+export type Order = {
+  number: number;
+  name: string;
+};

@@ -1,6 +1,6 @@
 import { LabeledValue } from '../ui/labeled-value/labeled-value';
 
-import type { TIngredient } from '@/utils/types';
+import type { TIngredient } from '@utils/types';
 
 import styles from './ingredient-details.module.css';
 

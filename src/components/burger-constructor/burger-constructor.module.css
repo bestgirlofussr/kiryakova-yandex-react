@@ -15,15 +15,9 @@
   overflow: hidden;
 }
 
-.ingredients_wrapper {
+.order_cost {
   display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden auto;
-}
-
-.ingredient_drag {
-  display: flex;
+  justify-content: end;
   align-items: center;
 }
 
@@ -32,8 +26,9 @@
   background-color: #1c1c21;
 }
 
-.order_cost {
+.error {
   display: flex;
-  justify-content: end;
+  justify-content: center;
   align-items: center;
+  background-color: #1c1c21;
 }
