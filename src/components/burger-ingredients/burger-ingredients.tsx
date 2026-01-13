@@ -1,15 +1,10 @@
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 import { BurgerIngredient } from '@components/burger-ingredient/burger-ingredient';
-import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
-import { Modal } from '@components/modal/modal';
-import {
-  getSelectedIngredient,
-  resetSelectedIngredient,
-} from '@services/burger-ingredient/reducer';
 import { getIngredients } from '@services/burger-ingredients/reducer';
-import { useAppDispatch, useAppSelector } from '@services/store';
+import { useAppSelector } from '@services/store';
 import { type IngredientType, INGREDIENT_TYPES } from '@utils/types';
 
 import type React from 'react';
@@ -19,11 +14,9 @@ import styles from './burger-ingredients.module.css';
 export const BurgerIngredients = (): React.JSX.Element => {
   const [selectedType, setSelectedType] = useState<IngredientType>(INGREDIENT_TYPES.BUN);
 
+  const location = useLocation();
+
   const ingredients = useAppSelector(getIngredients);
-  const selectedIngredient = useAppSelector(getSelectedIngredient);
-
-  const dispatch = useAppDispatch();
-
   const ingredientTabs: {
     name: string;
     type: IngredientType;
@@ -95,54 +88,50 @@ export const BurgerIngredients = (): React.JSX.Element => {
   }, []);
 
   return (
-    <>
-      <section className={styles.burger_ingredients}>
-        <nav className="mb-10">
-          <ul className={styles.menu}>
-            {ingredientTabs.map((tab) => (
-              <Tab
-                key={tab.order}
-                value={tab.type}
-                active={tab.type === selectedType}
-                onClick={() => selectMenu(tab.type)}
+    <section className={styles.burger_ingredients}>
+      <nav className="mb-10">
+        <ul className={styles.menu}>
+          {ingredientTabs.map((tab) => (
+            <Tab
+              key={tab.order}
+              value={tab.type}
+              active={tab.type === selectedType}
+              onClick={() => selectMenu(tab.type)}
+            >
+              {tab.name}
+            </Tab>
+          ))}
+        </ul>
+      </nav>
+      <div className={styles.ingredients_container}>
+        <div className={styles.ingredients_wrapper} ref={ingredientsRef}>
+          {sortedGroups.map((tab) => (
+            <div key={tab.order} className="mb-10">
+              <h2
+                ref={(el) => {
+                  headerRefs.current[tab.type] = el;
+                }}
+                id={`menu_${tab.type}`}
+                className="text text_type_main-medium mb-6"
               >
                 {tab.name}
-              </Tab>
-            ))}
-          </ul>
-        </nav>
-        <div className={styles.ingredients_container}>
-          <div className={styles.ingredients_wrapper} ref={ingredientsRef}>
-            {sortedGroups.map((tab) => (
-              <div key={tab.order} className="mb-10">
-                <h2
-                  ref={(el) => {
-                    headerRefs.current[tab.type] = el;
-                  }}
-                  id={`menu_${tab.type}`}
-                  className="text text_type_main-medium mb-6"
-                >
-                  {tab.name}
-                </h2>
-                <div className={styles.ingredients}>
-                  {tab.items.map((item) => (
-                    <BurgerIngredient key={item._id} item={item} />
-                  ))}
-                </div>
+              </h2>
+              <div className={styles.ingredients}>
+                {tab.items.map((item) => (
+                  <Link
+                    className={styles.link}
+                    to={`/ingredients/${item._id}`}
+                    key={item._id}
+                    state={{ backgroundLocation: location }}
+                  >
+                    <BurgerIngredient item={item} />
+                  </Link>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      </section>
-      {!!selectedIngredient && (
-        <Modal
-          header="Детали ингредиента"
-          isOpen={!!selectedIngredient}
-          onClose={() => dispatch(resetSelectedIngredient())}
-        >
-          <IngredientDetails ingredient={selectedIngredient} />
-        </Modal>
-      )}
-    </>
+      </div>
+    </section>
   );
 };

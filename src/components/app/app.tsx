@@ -1,12 +1,12 @@
+import { IngredientDetails } from '@/components/ingredient-details/ingredient-details';
+import { Home } from '@/pages';
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { AppHeader } from '@components/app-header/app-header';
-import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
-import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
 import { ErrorFallback } from '@components/error/error-fallback';
+import { Modal } from '@components/modal/modal';
 import { fetchIngredients } from '@services/burger-ingredients/actions';
 import {
   getIngredientsError,
@@ -23,9 +23,22 @@ export const App = (): React.JSX.Element => {
 
   const dispatch = useAppDispatch();
 
+  const location = useLocation();
+  const state = location.state as { backgroundLocation?: Location };
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     void dispatch(fetchIngredients());
   }, []);
+
+  const onClose = (): void => {
+    if (state?.backgroundLocation) {
+      void navigate(state?.backgroundLocation);
+    } else {
+      void navigate(-1);
+    }
+  };
 
   return (
     <div className={styles.app}>
@@ -36,15 +49,30 @@ export const App = (): React.JSX.Element => {
         <ErrorFallback error={error} resetErrorBoundary={() => dispatch(resetError())} />
       ) : (
         <>
-          <h1 className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
-            Соберите бургер
-          </h1>
-          <main className={`${styles.main} pl-5 pr-5`}>
-            <DndProvider backend={HTML5Backend}>
-              <BurgerIngredients />
-              <BurgerConstructor />
-            </DndProvider>
-          </main>
+          {state?.backgroundLocation && (
+            <Routes location={location}>
+              <Route
+                path="/ingredients/:id"
+                element={
+                  <Modal header="Детали ингредиента" isOpen={true} onClose={onClose}>
+                    <IngredientDetails />
+                  </Modal>
+                }
+              />
+            </Routes>
+          )}
+          <Routes location={state?.backgroundLocation ?? location}>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/ingredients/:id"
+              element={
+                <div className={styles.ingredient}>
+                  <h2 className="text text_type_main-large">Детали ингредиента</h2>
+                  <IngredientDetails />
+                </div>
+              }
+            />
+          </Routes>
         </>
       )}
     </div>

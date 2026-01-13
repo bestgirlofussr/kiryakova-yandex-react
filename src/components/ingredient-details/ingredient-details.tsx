@@ -1,14 +1,17 @@
-import { LabeledValue } from '../ui/labeled-value/labeled-value';
-
-import type { TIngredient } from '@utils/types';
+import { LabeledValue } from '@/components/ui/labeled-value/labeled-value';
+import { getIngredients } from '@/services/burger-ingredients/reducer';
+import { useAppSelector } from '@/services/store';
+import { useParams } from 'react-router-dom';
 
 import styles from './ingredient-details.module.css';
 
-type IngredientDetailsProps = {
-  ingredient: TIngredient;
-};
-export const IngredientDetails: React.FC<IngredientDetailsProps> = ({ ingredient }) => {
-  return (
+export const IngredientDetails = (): React.JSX.Element => {
+  const { id } = useParams();
+
+  const ingredients = useAppSelector(getIngredients);
+  const ingredient = ingredients.find((it) => it._id === id);
+
+  return ingredient ? (
     <div className={styles.ingredient_details}>
       <img
         src={ingredient.image_large}
@@ -25,5 +28,7 @@ export const IngredientDetails: React.FC<IngredientDetailsProps> = ({ ingredient
         <LabeledValue label="Углеводы, г" value={ingredient.carbohydrates} />
       </div>
     </div>
+  ) : (
+    <></>
   );
 };
