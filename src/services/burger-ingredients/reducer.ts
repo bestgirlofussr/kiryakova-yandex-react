@@ -25,7 +25,7 @@ export const ingredientsSlice = createSlice({
     getIngredientsError: (state) => state.error,
   },
   reducers: {
-    resetError: (state) => {
+    resetIngredientsError: (state) => {
       state.error = initialState.error;
     },
   },
@@ -50,4 +50,4 @@ export const ingredientsSlice = createSlice({
 export const { getIngredients, getIngredientsLoading, getIngredientsError } =
   ingredientsSlice.selectors;
 
-export const { resetError } = ingredientsSlice.actions;
+export const { resetIngredientsError } = ingredientsSlice.actions;
