@@ -5,5 +5,5 @@ import type { Order, OrderRequest } from '@/utils/types';
 
 export const createOrder = createAsyncThunk<Order, OrderRequest>(
   'order/createOrder',
-  (orderData) => api.createOrder(orderData)
+  api.createOrder
 );

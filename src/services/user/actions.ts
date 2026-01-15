@@ -5,21 +5,15 @@ import type { User } from '@/utils/types';
 
 export const login = createAsyncThunk<User, { email: string; password: string }>(
   'user/login',
-  (data: { email: string; password: string }) => {
-    return api.login(data);
-  }
+  api.login
 );
 
 export const register = createAsyncThunk<
   User,
   { email: string; password: string; name: string }
->('user/register', (data: { email: string; password: string; name: string }) => {
-  return api.register(data);
-});
+>('user/register', api.register);
 
-export const logout = createAsyncThunk('user/logout', async () => {
-  await api.logout();
-});
+export const logout = createAsyncThunk<void, void>('user/logout', api.logout);
 
 export const checkUserAuth = createAsyncThunk<User | null>(
   'user/checkUserAuth',
@@ -34,9 +28,7 @@ export const checkUserAuth = createAsyncThunk<User | null>(
 export const updateUser = createAsyncThunk<
   User,
   { email?: string; password?: string; name?: string }
->('user/update', (data: { email?: string; password?: string; name?: string }) => {
-  return api.updateUser(data);
-});
+>('user/update', api.updateUser);
 
 export const sendForgotPasswordEmail = async (formData: {
   email: string;

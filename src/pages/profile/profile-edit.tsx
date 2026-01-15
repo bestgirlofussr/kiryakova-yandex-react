@@ -1,21 +1,28 @@
+import { useForm } from '@/hooks/useForm';
+import { useValidation } from '@/hooks/useValidation';
 import { useAppDispatch, useAppSelector } from '@/services/store';
 import { updateUser } from '@/services/user/actions';
 import { getUser, getUserLoading } from '@/services/user/reducer';
-import { validateEmail } from '@/utils/validation';
 import { Button, Input } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useState, type ChangeEvent } from 'react';
 
 // eslint-disable-next-line css-modules/no-unused-class
 import styles from './profile.module.css';
 
+type ProfileEditForm = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 export const ProfileEdit = (): React.JSX.Element => {
-  const [formData, setFormData] = useState({
+  const { values, setValues, handleChange } = useForm<ProfileEditForm>({
     name: '',
     email: '',
     password: '',
   });
 
-  const [emailError, setEmailError] = useState('');
+  const { errors, validate } = useValidation();
 
   const [isDirty, setIsDirty] = useState(false);
 
@@ -25,40 +32,30 @@ export const ProfileEdit = (): React.JSX.Element => {
 
   useEffect(() => {
     if (currentUser && !isDirty) {
-      setFormData((prev) => ({
-        ...prev,
+      setValues({
         email: currentUser.email,
-        name: currentUser.name || prev.name,
+        name: currentUser.name,
         password: '',
-      }));
+      });
     }
   }, [currentUser, isDirty]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
+    handleChange(e);
+    validate(e);
     setIsDirty(true);
-  };
-
-  const validate = (e: React.FocusEvent<HTMLInputElement, Element>): void => {
-    const { name, value } = e.target;
-
-    if (name === 'email') {
-      const error = validateEmail(value);
-      setEmailError(error);
-    }
   };
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    if (!emailError && formData.email && formData.name && !isUserLoading) {
-      console.log('Отправка:', formData);
-      void dispatch(updateUser(formData)).then(() => setIsDirty(false));
+    if (
+      !errors.email &&
+      !errors.name &&
+      (!values.password || !errors.password) &&
+      !isUserLoading
+    ) {
+      console.log('Отправка:', values);
+      void dispatch(updateUser(values)).then(() => setIsDirty(false));
     }
   };
 
@@ -67,24 +64,25 @@ export const ProfileEdit = (): React.JSX.Element => {
       <Input
         extraClass="mb-6"
         name="name"
+        error={!!errors.name}
+        errorText={errors.name}
         onChange={onChange}
         placeholder="Имя"
         size="default"
         type="text"
-        value={formData.name}
+        value={values.name}
         icon="EditIcon"
       />
       <Input
         extraClass="mb-6"
-        error={!!emailError}
-        errorText={emailError || 'Неправильный e-mail'}
+        error={!!errors.email}
+        errorText={errors.email}
         name="email"
         onChange={onChange}
-        onBlur={validate}
         placeholder="E-mail"
         size="default"
         type="email"
-        value={formData.email}
+        value={values.email}
         icon="EditIcon"
       />
       <Input
@@ -94,7 +92,7 @@ export const ProfileEdit = (): React.JSX.Element => {
         placeholder="Пароль"
         size="default"
         type="password"
-        value={formData.password}
+        value={values.password}
         icon="EditIcon"
       />
       {isDirty && (
@@ -110,7 +108,12 @@ export const ProfileEdit = (): React.JSX.Element => {
           </a>
           <Button
             htmlType="submit"
-            disabled={!!emailError || !formData.email || !formData.name || isUserLoading}
+            disabled={
+              !!errors.email ||
+              !!errors.name ||
+              !!(values.password && errors.password) ||
+              isUserLoading
+            }
           >
             Сохранить
           </Button>

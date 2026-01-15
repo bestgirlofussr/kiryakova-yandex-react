@@ -1,18 +1,27 @@
+import { useForm } from '@/hooks/useForm';
+import { useValidation } from '@/hooks/useValidation';
 import { useAppDispatch } from '@/services/store';
 import { checkUserAuth, resetPasswordEmail } from '@/services/user/actions';
 import { LOCAL_STORAGE_KEYS } from '@/utils/constants';
 import { Button, Input } from '@krgaa/react-developer-burger-ui-components';
-import { useState, type ChangeEvent, useEffect } from 'react';
+import { useEffect, type ChangeEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+
+type ResetPasswordForm = {
+  password: string;
+  code: string;
+};
 
 export const ResetPassword = (): React.JSX.Element => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const [formData, setFormData] = useState({
+  const { values, handleChange } = useForm<ResetPasswordForm>({
     password: '',
     code: '',
   });
+
+  const { errors, hasErrors, validate } = useValidation();
 
   useEffect(() => {
     const forgotFlag = localStorage.getItem(LOCAL_STORAGE_KEYS.forgotPassword);
@@ -22,21 +31,17 @@ export const ResetPassword = (): React.JSX.Element => {
     }
   }, [navigate]);
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    if (formData.password && formData.code) {
-      console.log('Отправка:', formData);
-      void resetPasswordEmail(formData).then(() => dispatch(checkUserAuth()));
+    if (!hasErrors()) {
+      console.log('Отправка:', values);
+      void resetPasswordEmail(values).then(() => dispatch(checkUserAuth()));
     }
+  };
+  const onChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    e.preventDefault();
+    handleChange(e);
+    validate(e);
   };
 
   return (
@@ -47,28 +52,28 @@ export const ResetPassword = (): React.JSX.Element => {
         <Input
           extraClass="mb-6"
           name="password"
+          error={!!errors.password}
+          errorText={errors.password}
           onChange={onChange}
           placeholder="Введите новый пароль"
           size="default"
           type="password"
-          value={formData.password}
+          value={values.password}
           icon="ShowIcon"
         />
         <Input
           extraClass="mb-6"
           name="code"
+          error={!!errors.code}
+          errorText={errors.code}
           onChange={onChange}
           placeholder="Введите код из письма"
           size="default"
           type="text"
-          value={formData.code}
+          value={values.code}
         />
 
-        <Button
-          extraClass="mb-20"
-          htmlType="submit"
-          disabled={!formData.password || !formData.code}
-        >
+        <Button extraClass="mb-20" htmlType="submit" disabled={hasErrors()}>
           Сохранить
         </Button>
 

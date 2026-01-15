@@ -5,5 +5,5 @@ import type { TIngredient } from '@utils/types';
 
 export const fetchIngredients = createAsyncThunk<TIngredient[]>(
   'ingredients/fetchIngredients',
-  () => api.getIngredients()
+  api.getIngredients
 );

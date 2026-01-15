@@ -1,47 +1,39 @@
+import { useForm } from '@/hooks/useForm';
+import { useValidation } from '@/hooks/useValidation';
 import { useAppDispatch, useAppSelector } from '@/services/store';
 import { login } from '@/services/user/actions';
 import { getUserLoading } from '@/services/user/reducer';
-import { validateEmail } from '@/utils/validation';
 import { Button, Input } from '@krgaa/react-developer-burger-ui-components';
-import { useState, type ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 
-export const Login = (): React.JSX.Element => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+import type { ChangeEvent } from 'react';
 
-  const [emailError, setEmailError] = useState('');
+type LoginForm = {
+  email: string;
+  password: string;
+};
+
+export const Login = (): React.JSX.Element => {
+  const { values, handleChange } = useForm<LoginForm>({ email: '', password: '' });
+
+  const { errors, hasErrors, validate } = useValidation();
 
   const dispatch = useAppDispatch();
 
   const isUserLoading = useAppSelector(getUserLoading);
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const validate = (e: React.FocusEvent<HTMLInputElement, Element>): void => {
-    const { name, value } = e.target;
-
-    if (name === 'email') {
-      const error = validateEmail(value);
-      setEmailError(error);
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    if (!emailError && formData.email && formData.password && !isUserLoading) {
-      console.log('Отправка:', formData);
-      void dispatch(login(formData));
+    if (!hasErrors() && !isUserLoading) {
+      console.log('Отправка:', values);
+      void dispatch(login(values));
     }
+  };
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    e.preventDefault();
+    handleChange(e);
+    validate(e);
   };
 
   return (
@@ -51,15 +43,14 @@ export const Login = (): React.JSX.Element => {
       <form onSubmit={handleSubmit} className="content-centered">
         <Input
           extraClass="mb-6"
-          error={!!emailError}
-          errorText={emailError || 'Неправильный e-mail'}
+          error={!!errors.email}
+          errorText={errors.email}
           name="email"
           onChange={onChange}
-          onBlur={validate}
           placeholder="E-mail"
           size="default"
           type="email"
-          value={formData.email}
+          value={values.email}
         />
 
         <Input
@@ -69,16 +60,14 @@ export const Login = (): React.JSX.Element => {
           placeholder="Пароль"
           size="default"
           type="password"
-          value={formData.password}
+          value={values.password}
           icon="ShowIcon"
         />
 
         <Button
           extraClass="mb-20"
           htmlType="submit"
-          disabled={
-            !!emailError || !formData.email || !formData.password || isUserLoading
-          }
+          disabled={hasErrors() || isUserLoading}
         >
           Войти
         </Button>
