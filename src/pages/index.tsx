@@ -1,5 +1,6 @@
 import { ForgotPassword } from './forgot-password';
 import { Home } from './home/home';
+import { Ingredient } from './ingredient/ingredient';
 import { Login } from './login';
 import { Logout } from './logout';
 import { NotFound } from './not-found';
@@ -20,4 +21,5 @@ export {
   ProfileOrders,
   NotFound,
   Logout,
+  Ingredient,
 };

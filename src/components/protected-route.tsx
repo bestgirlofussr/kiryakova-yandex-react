@@ -1,6 +1,6 @@
+import { useAppSelector } from '@/services/store';
 import { getUser, getIsAuthChecked } from '@/services/user/reducer';
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
-import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 
 type ProtectedProps = {
@@ -16,8 +16,8 @@ export const ProtectedRouteElement: React.FC<ProtectedProps> = ({
   onlyUnAuth = false,
   component,
 }) => {
-  const user = useSelector(getUser);
-  const isAuthChecked = useSelector(getIsAuthChecked);
+  const user = useAppSelector(getUser);
+  const isAuthChecked = useAppSelector(getIsAuthChecked);
   const location = useLocation();
 
   if (!isAuthChecked) {

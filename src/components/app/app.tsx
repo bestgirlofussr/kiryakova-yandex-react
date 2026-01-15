@@ -2,6 +2,7 @@ import { IngredientDetails } from '@/components/ingredient-details/ingredient-de
 import {
   ForgotPassword,
   Home,
+  Ingredient,
   Login,
   Logout,
   NotFound,
@@ -113,15 +114,7 @@ export const App = (): React.JSX.Element => {
               <Route index element={<ProfileEdit />} />
               <Route path="/profile/orders" element={<ProfileOrders />} />
             </Route>
-            <Route
-              path="/ingredients/:id"
-              element={
-                <div className={styles.ingredient}>
-                  <h2 className="text text_type_main-large">Детали ингредиента</h2>
-                  <IngredientDetails />
-                </div>
-              }
-            />
+            <Route path="/ingredients/:id" element={<Ingredient />} />
             <Route path="logout" element={<Logout />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
