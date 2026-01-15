@@ -77,7 +77,6 @@ export const userSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
-        state.isAuthChecked = false;
       })
       .addCase(checkUserAuth.pending, (state) => {
         state.isAuthChecked = false;
