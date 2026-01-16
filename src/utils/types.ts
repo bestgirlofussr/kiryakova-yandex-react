@@ -27,3 +27,18 @@ export type Order = {
   number: number;
   name: string;
 };
+
+export type OrderRequest = {
+  ingredients: string[];
+};
+
+export type OrderResponse = {
+  success: boolean;
+  name: string;
+  order: { number: number };
+};
+
+export type User = {
+  email: string;
+  name: string;
+};

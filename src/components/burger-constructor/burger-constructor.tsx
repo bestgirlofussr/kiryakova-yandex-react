@@ -1,5 +1,7 @@
+import { getUser, getIsAuthChecked } from '@/services/user/reducer';
 import { Button, Preloader } from '@krgaa/react-developer-burger-ui-components';
 import { useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { ConstructorBunSlot } from '@components/constructor-bun-slot/constructor-bun-slot';
 import { ConstructorIngredients } from '@components/constructor-ingredients/constructor-ingredients';
@@ -13,8 +15,8 @@ import {
 } from '@services/burger-constructor/reducer';
 import { createOrder } from '@services/order/actions';
 import {
-  getError,
-  getLoading,
+  getOrderError,
+  getOrderLoading,
   getOrderDetails,
   resetOrderDetails,
 } from '@services/order/reducer';
@@ -27,9 +29,12 @@ export const BurgerConstructor = (): React.JSX.Element => {
   const bun = useAppSelector(getBun);
   const selectedIngredients = useAppSelector(getIngredients);
   const order = useAppSelector(getOrderDetails);
-  const loading = useAppSelector(getLoading);
-  const error = useAppSelector(getError);
+  const loading = useAppSelector(getOrderLoading);
+  const error = useAppSelector(getOrderError);
 
+  const isAuthChecked = useAppSelector(getIsAuthChecked);
+  const currentUser = useAppSelector(getUser);
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const canOrder = useMemo(
@@ -45,7 +50,13 @@ export const BurgerConstructor = (): React.JSX.Element => {
   }, [selectedIngredients, bun]);
 
   const sendOrder = useCallback(async () => {
-    if (!bun || loading) return;
+    if (!bun || loading || !isAuthChecked) return;
+
+    if (!currentUser) {
+      await navigate('/login');
+      return;
+    }
+
     const ingredientsIds = [
       bun._id, // Булка сверху
       ...selectedIngredients.map((it) => it._id),
@@ -54,7 +65,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
 
     await dispatch(createOrder({ ingredients: ingredientsIds }));
     dispatch(resetConstructor());
-  }, [bun, loading, selectedIngredients]);
+  }, [bun, loading, selectedIngredients, currentUser, isAuthChecked]);
 
   return loading ? (
     <Preloader />
@@ -91,7 +102,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
       )}
       {!!error && (
         <Modal isOpen={!!error} onClose={() => dispatch(resetOrderDetails())}>
-          <div className={styles.error}>
+          <div className="error">
             <p className="text text_type_main-default">
               Произошла ошибка при отправке заказа: {error.message}
             </p>

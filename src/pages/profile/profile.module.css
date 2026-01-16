@@ -1,0 +1,40 @@
+.main {
+  display: flex;
+  width: 1240px;
+  height: 100%;
+  margin: 0 auto;
+  margin-top: 120px;
+  overflow: hidden;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+}
+
+.navlink {
+  height: 64px;
+  color: var(--text-inactive-color);
+  line-height: 64px;
+}
+
+.navlink_active {
+  color: var(--text-primary-color);
+}
+
+.info {
+  color: #8585ad;
+
+  /* color: var(--text-secondary-color); */
+}
+
+.form {
+  width: 480px;
+}
+
+.footer {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
