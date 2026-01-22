@@ -4,14 +4,14 @@ import { login, logout, checkUserAuth, register, updateUser } from './actions';
 
 import type { User } from '@utils/types';
 
-export type OrderState = {
+export type UserState = {
   user: User | null;
   isAuthChecked: boolean;
   error: Error | null;
   loading: boolean;
 };
 
-const initialState: OrderState = {
+const initialState: UserState = {
   user: null,
   isAuthChecked: false,
   error: null,
