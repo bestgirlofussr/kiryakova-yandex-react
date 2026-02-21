@@ -6,15 +6,6 @@
   color: var(--text-primary-color);
 }
 
-/* TODO: вынести в общие */
-
-.ingredients_container {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
-}
-
 .order_cost {
   display: flex;
   justify-content: end;

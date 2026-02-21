@@ -1,17 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { createOrder } from './actions';
+import { createOrder, fetchOrder } from './actions';
 
-import type { Order } from '@utils/types';
+import type { Order, OrderInfo } from '@utils/types';
 
 export type OrderState = {
-  order: Order | null;
+  orderInfo: OrderInfo | null;
+  infoLoading: boolean;
+  infoError: Error | null;
+  currentOrder: Order | null;
   loading: boolean;
   error: Error | null;
 };
 
 const initialState: OrderState = {
-  order: null,
+  orderInfo: null,
+  infoLoading: false,
+  infoError: null,
+  currentOrder: null,
   loading: false,
   error: null,
 };
@@ -20,35 +26,61 @@ export const orderSlice = createSlice({
   name: 'order',
   initialState,
   selectors: {
-    getOrderDetails: (state) => state.order,
+    getOrderDetails: (state) => state.orderInfo,
+    getOrderDetailsError: (state) => state.infoError,
+    getOrderDetailsLoading: (state) => state.infoLoading,
+    getOrder: (state) => state.currentOrder,
     getOrderError: (state) => state.error,
     getOrderLoading: (state) => state.loading,
   },
   reducers: {
     resetOrderDetails: (state) => {
-      state.order = null;
+      state.orderInfo = null;
+      state.infoError = null;
+    },
+    resetOrder: (state) => {
+      state.currentOrder = null;
       state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(createOrder.pending, (state) => {
+        state.infoLoading = true;
+        state.infoError = null;
+      })
+      .addCase(createOrder.rejected, (state, action) => {
+        state.infoLoading = false;
+        state.orderInfo = null;
+        state.infoError = new Error(action.error?.message ?? 'Неизвестная ошибка');
+      })
+      .addCase(createOrder.fulfilled, (state, action) => {
+        state.infoLoading = false;
+        state.orderInfo = action.payload;
+      })
+      .addCase(fetchOrder.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createOrder.rejected, (state, action) => {
+      .addCase(fetchOrder.rejected, (state, action) => {
         state.loading = false;
-        state.order = null;
+        state.currentOrder = null;
         state.error = new Error(action.error?.message ?? 'Неизвестная ошибка');
       })
-      .addCase(createOrder.fulfilled, (state, action) => {
+      .addCase(fetchOrder.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action);
-        state.order = action.payload;
+        state.currentOrder = action.payload;
       });
   },
 });
 
-export const { getOrderDetails, getOrderError, getOrderLoading } = orderSlice.selectors;
+export const {
+  getOrderDetails,
+  getOrderDetailsError,
+  getOrderDetailsLoading,
+  getOrderError,
+  getOrderLoading,
+  getOrder,
+} = orderSlice.selectors;
 
-export const { resetOrderDetails } = orderSlice.actions;
+export const { resetOrderDetails, resetOrder } = orderSlice.actions;

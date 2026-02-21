@@ -36,7 +36,6 @@ export const constructorSlice = createSlice({
       }),
     },
     deleteIngredient: (state, action: PayloadAction<string>) => {
-      console.log(action.payload);
       state.ingredients = state.ingredients.filter(
         (it) => it.uniqueId !== action.payload
       );

@@ -15,9 +15,9 @@ import {
 } from '@services/burger-constructor/reducer';
 import { createOrder } from '@services/order/actions';
 import {
-  getOrderError,
-  getOrderLoading,
   getOrderDetails,
+  getOrderDetailsLoading,
+  getOrderDetailsError,
   resetOrderDetails,
 } from '@services/order/reducer';
 import { useAppDispatch, useAppSelector } from '@services/store';
@@ -29,8 +29,8 @@ export const BurgerConstructor = (): React.JSX.Element => {
   const bun = useAppSelector(getBun);
   const selectedIngredients = useAppSelector(getIngredients);
   const order = useAppSelector(getOrderDetails);
-  const loading = useAppSelector(getOrderLoading);
-  const error = useAppSelector(getOrderError);
+  const loading = useAppSelector(getOrderDetailsLoading);
+  const error = useAppSelector(getOrderDetailsError);
 
   const isAuthChecked = useAppSelector(getIsAuthChecked);
   const currentUser = useAppSelector(getUser);
@@ -67,11 +67,9 @@ export const BurgerConstructor = (): React.JSX.Element => {
     dispatch(resetConstructor());
   }, [bun, loading, selectedIngredients, currentUser, isAuthChecked]);
 
-  return loading ? (
-    <Preloader />
-  ) : (
+  return (
     <section className={styles.burger_constructor}>
-      <div className={`${styles.ingredients_container} mb-10 pl-4`}>
+      <div className="container mb-10 pl-4">
         <ConstructorBunSlot
           item={bun}
           extraClass={`${styles.ingredient} mr-4 ml-8`}
@@ -95,6 +93,13 @@ export const BurgerConstructor = (): React.JSX.Element => {
           Оформить заказ
         </Button>
       </div>
+      {loading && (
+        <Modal isOpen={true} header="Оформление заказа...">
+          <div className="mt-5">
+            <Preloader />
+          </div>
+        </Modal>
+      )}
       {!!order && (
         <Modal isOpen={!!order} onClose={() => dispatch(resetOrderDetails())}>
           <OrderDetails order={order} />

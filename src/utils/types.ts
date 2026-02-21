@@ -1,7 +1,7 @@
 export type TIngredient = {
   _id: string;
   name: string;
-  type: string;
+  type: IngredientType;
   proteins: number;
   fat: number;
   carbohydrates: number;
@@ -23,9 +23,25 @@ export const INGREDIENT_TYPES = {
 
 export type IngredientType = (typeof INGREDIENT_TYPES)[keyof typeof INGREDIENT_TYPES];
 
-export type Order = {
+export const ORDER_STATUSES = {
+  DONE: 'done' as const,
+  CREATED: 'created' as const,
+  PENDING: 'pending' as const,
+  CANCELED: 'canceled' as const,
+} as const;
+
+export type OrderStatus = (typeof ORDER_STATUSES)[keyof typeof ORDER_STATUSES];
+
+export type OrderInfo = {
   number: number;
   name: string;
+};
+
+export type Order = OrderInfo & {
+  status: OrderStatus;
+  ingredients: string[];
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type OrderRequest = {
@@ -38,7 +54,23 @@ export type OrderResponse = {
   order: { number: number };
 };
 
+export type OrdersResponse = {
+  success: boolean;
+  orders: Order[];
+  total: number;
+  totalToday: number;
+};
+
 export type User = {
   email: string;
   name: string;
 };
+
+export const WEB_SOCKET_STATUSES = {
+  CONNECTING: 'CONNECTING...' as const,
+  ONLINE: 'ONLINE' as const,
+  OFFLINE: 'OFFLINE' as const,
+} as const;
+
+export type WebsocketStatus =
+  (typeof WEB_SOCKET_STATUSES)[keyof typeof WEB_SOCKET_STATUSES];

@@ -29,7 +29,6 @@ export const Register = (): React.JSX.Element => {
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     if (!hasErrors() && !isUserLoading) {
-      console.log('Отправка:', values);
       void dispatch(register(values));
     }
   };

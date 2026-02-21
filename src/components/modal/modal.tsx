@@ -8,16 +8,23 @@ import styles from './modal.module.css';
 
 type ModalProps = {
   isOpen: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   children: React.ReactNode;
   header?: string;
+  headerClass?: string;
 };
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, header }) => {
+export const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  children,
+  header,
+  headerClass = 'text text_type_main-large',
+}) => {
   useEffect(() => {
     const handleEscKey = (event: KeyboardEvent): void => {
       if (event.key === 'Escape') {
-        onClose();
+        onClose?.();
       }
     };
 
@@ -31,7 +38,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, header 
     <>
       <div className={styles.modal}>
         <div className={styles.header}>
-          <h2 className="text text_type_main-large">{header}</h2>
+          <h2 className={headerClass}>{header}</h2>
           <CloseIcon type="primary" className={styles.closeButton} onClick={onClose} />
         </div>
         {children}

@@ -1,13 +1,13 @@
 import styles from './modal-overlay.module.css';
 
 type ModalOverlayProps = {
-  onClose: () => void;
+  onClose?: () => void;
 };
 
 export const ModalOverlay: React.FC<ModalOverlayProps> = ({ onClose }) => {
   const handleOverlayClick = (e: React.MouseEvent): void => {
     if (e.target === e.currentTarget) {
-      onClose();
+      onClose?.();
     }
   };
 

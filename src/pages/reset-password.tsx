@@ -34,7 +34,6 @@ export const ResetPassword = (): React.JSX.Element => {
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     if (!hasErrors()) {
-      console.log('Отправка:', values);
       void resetPasswordEmail(values).then(() => dispatch(checkUserAuth()));
     }
   };

@@ -54,13 +54,12 @@ export const ProfileEdit = (): React.JSX.Element => {
       (!values.password || !errors.password) &&
       !isUserLoading
     ) {
-      console.log('Отправка:', values);
       void dispatch(updateUser(values)).then(() => setIsDirty(false));
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className={`${styles.form}`}>
+    <form onSubmit={handleSubmit} className={`${styles.form} mt-30`}>
       <Input
         extraClass="mb-6"
         name="name"

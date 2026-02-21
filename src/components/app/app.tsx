@@ -8,18 +8,21 @@ import {
   NotFound,
   Profile,
   ProfileEdit,
-  ProfileOrders,
   Register,
   ResetPassword,
+  Order,
+  Feed,
+  ProfileFeed,
 } from '@/pages';
 import { checkUserAuth } from '@/services/user/actions';
 import { getUserError, resetUserError } from '@/services/user/reducer';
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { AppHeader } from '@components/app-header/app-header';
 import { Modal } from '@components/modal/modal';
+import { OrderCompositionModal } from '@components/order-composition-modal/order-composition-modal';
 import { ProtectedRouteElement as Protected } from '@components/protected-route';
 import { fetchIngredients } from '@services/burger-ingredients/actions';
 import {
@@ -51,13 +54,13 @@ export const App = (): React.JSX.Element => {
     void dispatch(checkUserAuth());
   }, []);
 
-  const onClose = (): void => {
+  const onClose = useCallback(() => {
     if (state?.backgroundLocation) {
       void navigate(state?.backgroundLocation);
     } else {
       void navigate(-1);
     }
-  };
+  }, []);
 
   return (
     <div className={styles.app}>
@@ -90,6 +93,18 @@ export const App = (): React.JSX.Element => {
                   </Modal>
                 }
               />
+
+              <Route
+                path="/profile/orders/:number"
+                element={
+                  <Protected component={<OrderCompositionModal onClose={onClose} />} />
+                }
+              />
+
+              <Route
+                path="/feed/:number"
+                element={<OrderCompositionModal onClose={onClose} />}
+              />
             </Routes>
           )}
           <Routes location={state?.backgroundLocation ?? location}>
@@ -112,8 +127,15 @@ export const App = (): React.JSX.Element => {
             />
             <Route path="/profile" element={<Protected component={<Profile />} />}>
               <Route index element={<ProfileEdit />} />
-              <Route path="/profile/orders" element={<ProfileOrders />} />
+              <Route path="orders" element={<ProfileFeed />} />
             </Route>
+            <Route
+              path="/profile/orders/:number"
+              element={<Protected component={<Order />} />}
+            />
+
+            <Route path="/feed" element={<Feed />} />
+            <Route path="/feed/:number" element={<Order />} />
             <Route path="/ingredients/:id" element={<Ingredient />} />
             <Route path="logout" element={<Logout />} />
             <Route path="*" element={<NotFound />} />
