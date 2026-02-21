@@ -37,6 +37,7 @@ export const socketMiddleware = <T>(
       disconnect,
     } = wsActions;
     let isConnected = false;
+    let isRefreshing = false;
     let reconnectTimer = 0;
     let url = '';
 
@@ -44,6 +45,12 @@ export const socketMiddleware = <T>(
       const { dispatch } = store;
 
       if (connect.match(action)) {
+        clearTimeout(reconnectTimer);
+
+        if (socket && socket.readyState !== WebSocket.CLOSED) {
+          socket.close();
+        }
+
         url = action.payload;
         socket = new WebSocket(url);
         isConnected = true;
@@ -65,11 +72,14 @@ export const socketMiddleware = <T>(
 
             if (
               withTokenRefresh &&
+              !isRefreshing &&
               typeof parsedData === 'object' &&
               parsedData !== null &&
               'message' in parsedData &&
               parsedData.message === 'Invalid or missing token'
             ) {
+              isRefreshing = true;
+
               api
                 .refreshToken()
                 .then((refreshData) => {
@@ -82,6 +92,9 @@ export const socketMiddleware = <T>(
                 })
                 .catch((err) => {
                   dispatch(onError((err as { message: string }).message));
+                })
+                .finally(() => {
+                  isRefreshing = false;
                 });
 
               // закрываем старое соединение
@@ -100,6 +113,7 @@ export const socketMiddleware = <T>(
           dispatch(onClose());
 
           if (isConnected) {
+            isConnected = false;
             reconnectTimer = window.setTimeout(() => {
               dispatch(connect(url));
             }, RECONNECT_PERIOD);
@@ -117,6 +131,7 @@ export const socketMiddleware = <T>(
 
       if (socket && disconnect.match(action)) {
         clearTimeout(reconnectTimer);
+
         isConnected = false;
         reconnectTimer = 0;
         socket.close();
