@@ -3,13 +3,14 @@ import { useOrderStatus } from '@/hooks/useOrderStatus';
 import { fetchOrder } from '@/services/order/actions';
 import { getOrderError, getOrderLoading, resetOrder } from '@/services/order/reducer';
 import { useAppDispatch, useAppSelector } from '@/services/store';
-import { INGREDIENT_TYPES, type TIngredient } from '@/utils/types';
 import { FormattedDate, Preloader } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Modal } from '@components/modal/modal';
 import { Price } from '@components/ui/price/price';
+
+import type { TIngredient } from '@/utils/types';
 
 import styles from './order-composition.module.css';
 
@@ -54,8 +55,6 @@ export const OrderComposition: React.FC<OrderCompositionProps> = ({
     for (const item of ingredients) {
       group[item._id] ||= [];
       group[item._id].push(item);
-      // еще раз добавим булку
-      if (item.type === INGREDIENT_TYPES.BUN) group[item._id].push(item);
     }
     return group;
   }, [ingredients]);

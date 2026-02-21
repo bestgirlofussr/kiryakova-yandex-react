@@ -1,4 +1,5 @@
 import { OrderCard } from '@/components/order-card/order-card';
+import { getIngredientsMap } from '@/services/burger-ingredients/reducer';
 import { useAppSelector } from '@/services/store';
 import { useMemo } from 'react';
 import { Link, useLocation, useMatch } from 'react-router-dom';
@@ -12,19 +13,14 @@ type OrderListProps = {
 
 export const OrderList: React.FC<OrderListProps> = ({ className, orders }) => {
   const location = useLocation();
-  const ingredientIds = useAppSelector((state) =>
-    state.ingredients.ingredients.map((it) => it._id)
-  );
+  const ingredients = useAppSelector(getIngredientsMap);
 
   const showStatus = !!useMatch('/profile/orders');
 
   // убираем заказы, которые нельзя отобразить
   const correctOrders = useMemo(
-    () =>
-      orders.filter((it) =>
-        it.ingredients.every((ingr) => ingredientIds.includes(ingr))
-      ),
-    [ingredientIds, orders]
+    () => orders.filter((it) => it.ingredients.every((id) => id in ingredients)),
+    [ingredients, orders]
   );
 
   return (

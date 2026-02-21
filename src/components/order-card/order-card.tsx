@@ -50,7 +50,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
         <ul className={styles.order_stack}>
           {ingredientStack.map((ingredient, index) => (
             <li
-              key={ingredient._id}
+              key={`${ingredient._id}_${index}`}
               className={`${styles.ingredient_wrapper} gradient_container`}
             >
               <div className="gradient_wrapper">
