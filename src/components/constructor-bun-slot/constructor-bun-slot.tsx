@@ -27,7 +27,6 @@ export const ConstructorBunSlot: React.FC<BunSlotProps> = ({
   const [{ isOver }, drop] = useDrop({
     accept: 'bun',
     drop(bun: TIngredient) {
-      console.log(bun);
       dispatch(setBun(bun));
     },
     collect: (monitor) => ({

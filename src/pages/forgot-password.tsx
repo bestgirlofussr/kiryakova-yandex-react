@@ -20,7 +20,6 @@ export const ForgotPassword = (): React.JSX.Element => {
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     if (!hasErrors()) {
-      console.log('Отправка:', values);
       void sendForgotPasswordEmail(values).then(() => navigate('/reset-password'));
     }
   };

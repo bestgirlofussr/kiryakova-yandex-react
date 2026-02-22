@@ -1,10 +1,10 @@
 import donePng from '@/images/done.png';
 
-import type { Order } from '@utils/types';
+import type { OrderInfo } from '@utils/types';
 
 import styles from './order-details.module.css';
 type OrderDetailsProps = {
-  order: Order;
+  order: OrderInfo;
 };
 export const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
   return (

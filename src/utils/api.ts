@@ -1,7 +1,14 @@
 // services/api/index.ts
 import { LOCAL_STORAGE_KEYS } from './constants';
 
-import type { Order, OrderRequest, OrderResponse, TIngredient, User } from './types';
+import type {
+  Order,
+  OrderInfo,
+  OrderRequest,
+  OrderResponse,
+  TIngredient,
+  User,
+} from './types';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -15,7 +22,7 @@ type ApiResponse<T = unknown> = {
   success?: boolean;
   data?: T;
   message?: string;
-  order?: Order;
+  order?: OrderInfo;
   user?: User;
   accessToken?: string;
   refreshToken?: string;
@@ -96,14 +103,20 @@ export const getIngredients = async (): Promise<TIngredient[]> => {
   return response.data;
 };
 
-export const createOrder = async (orderData: OrderRequest): Promise<Order> => {
+export const createOrder = async (orderData: OrderRequest): Promise<OrderInfo> => {
   const response = await fetchWithRefresh<OrderResponse>(`${BASE_URL}/orders`, {
     method: 'POST',
     body: JSON.stringify(orderData),
-    //TODO проверить надо ли
     headers: { ...getAuthHeaders() },
   });
   return { ...response.order, name: response.name };
+};
+
+export const getOrder = async (params: { number: number }): Promise<Order> => {
+  const response = await fetchWithRefresh<{ orders: Order[] }>(
+    `${BASE_URL}/orders/${params.number}`
+  );
+  return response.orders[0];
 };
 
 export const register = async (data: {
@@ -221,6 +234,7 @@ export const isTokenExists = (): boolean =>
 export const api = {
   getIngredients,
   createOrder,
+  getOrder,
   register,
   login,
   getUser,
@@ -229,4 +243,5 @@ export const api = {
   resetPassword,
   updateUser,
   isTokenExists,
+  refreshToken,
 };

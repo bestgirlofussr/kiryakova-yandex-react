@@ -35,7 +35,7 @@ export const Profile = (): React.JSX.Element => {
 
   return (
     <main className={`${styles.main} pl-5 pr-5`}>
-      <div className={`${styles.nav} mr-15`}>
+      <div className={`${styles.nav} mt-30 mr-15`}>
         {navLinks.map((link) => (
           <NavLink
             key={link.to}

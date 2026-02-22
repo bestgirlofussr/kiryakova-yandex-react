@@ -103,8 +103,8 @@ export const BurgerIngredients = (): React.JSX.Element => {
           ))}
         </ul>
       </nav>
-      <div className={styles.ingredients_container}>
-        <div className={styles.ingredients_wrapper} ref={ingredientsRef}>
+      <div className="container">
+        <div className="wrapper" ref={ingredientsRef}>
           {sortedGroups.map((tab) => (
             <div key={tab.order} className="mb-10">
               <h2
@@ -119,7 +119,7 @@ export const BurgerIngredients = (): React.JSX.Element => {
               <div className={styles.ingredients}>
                 {tab.items.map((item) => (
                   <Link
-                    className={styles.link}
+                    className="link"
                     to={`/ingredients/${item._id}`}
                     key={item._id}
                     state={{ backgroundLocation: location }}

@@ -1,6 +1,7 @@
 import { LabeledValue } from '@/components/ui/labeled-value/labeled-value';
-import { getIngredients } from '@/services/burger-ingredients/reducer';
+import { getIngredientsMap } from '@/services/burger-ingredients/reducer';
 import { useAppSelector } from '@/services/store';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import styles from './ingredient-details.module.css';
@@ -8,8 +9,8 @@ import styles from './ingredient-details.module.css';
 export const IngredientDetails = (): React.JSX.Element => {
   const { id } = useParams();
 
-  const ingredients = useAppSelector(getIngredients);
-  const ingredient = ingredients.find((it) => it._id === id);
+  const ingredients = useAppSelector(getIngredientsMap);
+  const ingredient = useMemo(() => ingredients[id ?? ''], [ingredients, id]);
 
   return ingredient ? (
     <div className={styles.ingredient_details}>
