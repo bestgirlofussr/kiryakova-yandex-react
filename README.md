@@ -4,7 +4,8 @@
 
 ## 🚀 Демо
 
-**[Смотреть проект в работе](https://bestgirlofussr.github.io/kiryakova-yandex-react/)**
+**[Смотреть проект в работе на GitHub Pages](https://bestgirlofussr.github.io/kiryakova-yandex-react/)**  
+**[Смотреть проект на продакшен-сервере(полноценный деплой с Nginx на сервере Яндекс.Облако)](https://bestburgerinspace.nomorepartiessite.ru/)**
 
 ## 🚀 Быстрый старт
 
