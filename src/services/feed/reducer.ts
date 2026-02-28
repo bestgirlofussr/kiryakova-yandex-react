@@ -16,7 +16,7 @@ export type FeedOrdersStore = {
   totalToday: number;
 };
 
-const initialState: FeedOrdersStore = {
+export const initialState: FeedOrdersStore = {
   status: WEB_SOCKET_STATUSES.OFFLINE,
   orders: [],
   connectionError: null,
