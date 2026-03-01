@@ -46,6 +46,7 @@ export const ConstructorIngredients: React.FC = () => {
     <div
       className={`${styles.ingredients_wrapper} ${isOver ? styles.ingredients_drop : ''} pr-4 mt-4 mb-4`}
       ref={handleRef}
+      data-testid="constructor-main"
     >
       {selectedIngredients.length > 0 ? (
         selectedIngredients.map((ingredient) => (

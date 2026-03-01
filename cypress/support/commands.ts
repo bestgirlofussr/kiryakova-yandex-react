@@ -35,3 +35,15 @@
 //     }
 //   }
 // }
+Cypress.Commands.add('prepareBurgerTest', () => {
+  // Мокаем API
+  cy.intercept('GET', '**/ingredients', { fixture: 'ingredients' }).as('getIngredients');
+  cy.intercept('POST', '**/orders', { fixture: 'order-success' }).as('createOrder');
+  cy.intercept('POST', '**/auth/login', { fixture: 'login-success' }).as('postLogin');
+
+  // Открываем главную страницу
+  cy.visit('http://localhost:5173/');
+
+  // Ждём ингредиенты
+  cy.wait('@getIngredients');
+});

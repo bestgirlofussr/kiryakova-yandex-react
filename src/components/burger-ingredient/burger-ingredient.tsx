@@ -62,6 +62,7 @@ export const BurgerIngredient: React.FC<IngredientItemProps> = ({ item }) => {
       onClick={() => dispatch(setSelectedIngredient(item))}
       role="button"
       ref={dragAndClickRef}
+      data-testid={`ingredient-card-${item.type}`}
     >
       {renderCounter(getIngredientCount(item._id))}
       <img src={item.image} alt={`${item.name}.`} className={`${styles.image} mb-1`} />

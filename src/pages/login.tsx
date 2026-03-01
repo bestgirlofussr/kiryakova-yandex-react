@@ -50,6 +50,7 @@ export const Login = (): React.JSX.Element => {
           size="default"
           type="email"
           value={values.email}
+          data-testid="email-input"
         />
 
         <Input
@@ -61,12 +62,14 @@ export const Login = (): React.JSX.Element => {
           type="password"
           value={values.password}
           icon="ShowIcon"
+          data-testid="password-input"
         />
 
         <Button
           extraClass="mb-20"
           htmlType="submit"
           disabled={hasErrors() || isUserLoading}
+          data-testid="login-button"
         >
           Войти
         </Button>

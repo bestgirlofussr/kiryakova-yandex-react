@@ -9,7 +9,9 @@ type OrderDetailsProps = {
 export const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
   return (
     <div className={styles.order_details}>
-      <p className="text text_type_digits-large mb-8">{order.number}</p>
+      <p data-testid="order-number" className="text text_type_digits-large mb-8">
+        {order.number}
+      </p>
       <p className="text text_type_main-medium mb-15">идентификатор заказа</p>
       <img
         src={donePng}
