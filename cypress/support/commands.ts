@@ -42,8 +42,25 @@ Cypress.Commands.add('prepareBurgerTest', () => {
   cy.intercept('POST', '**/auth/login', { fixture: 'login-success' }).as('postLogin');
 
   // Открываем главную страницу
-  cy.visit('http://localhost:5173/');
+  cy.visit('/');
 
   // Ждём ингредиенты
   cy.wait('@getIngredients');
+});
+
+Cypress.Commands.add('prepareSelectors', () => {
+  cy.get('[data-testid="ingredient-card-bun"]').as('bunCard');
+  cy.get('[data-testid="ingredient-card-main"]').as('mainCard');
+  cy.get('[data-testid="constructor-bun"]').as('bunZone');
+  cy.get('[data-testid="constructor-main"]').as('mainZone');
+  cy.get('[data-testid="order-button"]').as('orderBtn');
+  cy.get('[data-testid="price"]').as('price');
+});
+
+Cypress.Commands.add('login', () => {
+  cy.get('[data-testid="email-input"]').type('test@example.com');
+  cy.get('[data-testid="password-input"]').type('123456');
+  cy.get('[data-testid="login-button"]').click();
+
+  cy.wait('@postLogin');
 });
