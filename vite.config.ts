@@ -20,7 +20,7 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
-  base: '',
+  base: '/',
   test: {
     globals: true,
     environment: 'jsdom',
@@ -32,16 +32,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-    },
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'burger-ui': ['@krgaa/react-developer-burger-ui-components', 'react-dnd'],
-          vendor: ['react', 'react-dom', 'react-redux'],
-        },
-      },
     },
   },
 });
