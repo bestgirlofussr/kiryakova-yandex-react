@@ -34,4 +34,14 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'burger-ui': ['@krgaa/react-developer-burger-ui-components', 'react-dnd'],
+          vendor: ['react', 'react-dom', 'react-redux'],
+        },
+      },
+    },
+  },
 });
