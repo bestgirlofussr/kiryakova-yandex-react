@@ -123,6 +123,7 @@ export const BurgerIngredients = (): React.JSX.Element => {
                     to={`/ingredients/${item._id}`}
                     key={item._id}
                     state={{ backgroundLocation: location }}
+                    data-testid={`ingredient-card-link`}
                   >
                     <BurgerIngredient item={item} />
                   </Link>

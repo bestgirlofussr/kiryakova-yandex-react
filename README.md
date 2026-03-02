@@ -2,6 +2,11 @@
 
 Проект Stellar Burger с модальными окнами, drag&drop и API.
 
+## 🚀 Демо
+
+**[Смотреть проект в работе на GitHub Pages](https://bestgirlofussr.github.io/kiryakova-yandex-react/)**  
+**[Смотреть проект на продакшен-сервере(полноценный деплой с Nginx на сервере Яндекс.Облако)](https://bestburgerinspace.nomorepartiessite.ru/)**
+
 ## 🚀 Быстрый старт
 
 git clone https://github.com/bestgirlofussr/kiryakova-yandex-react

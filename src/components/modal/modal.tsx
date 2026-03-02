@@ -36,7 +36,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   return createPortal(
     <>
-      <div className={styles.modal}>
+      <div className={styles.modal} data-testid="modal">
         <div className={styles.header}>
           <h2 className={headerClass}>{header}</h2>
           <CloseIcon type="primary" className={styles.closeButton} onClick={onClose} />

@@ -11,7 +11,7 @@ export type BurgerIngredientsState = {
   error: Error | null;
 };
 
-const initialState: BurgerIngredientsState = {
+export const initialState: BurgerIngredientsState = {
   ingredients: [],
   ingredientsMap: {},
   loading: true,

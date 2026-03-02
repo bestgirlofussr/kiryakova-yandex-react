@@ -42,7 +42,7 @@ export const ConstructorBunSlot: React.FC<BunSlotProps> = ({
   );
 
   return (
-    <div ref={handleRef}>
+    <div ref={handleRef} data-testid="constructor-bun">
       {item ? (
         <ConstructorElement
           extraClass={`${extraClass} ${isOver ? styles.drop_target : ''}`}

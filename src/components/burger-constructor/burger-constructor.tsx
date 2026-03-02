@@ -89,7 +89,12 @@ export const BurgerConstructor = (): React.JSX.Element => {
       <div className={`${styles.order_cost} pl-4 pr-4`}>
         <Price className="mr-10" cost={orderCost} size="medium" />
 
-        <Button onClick={() => void sendOrder()} htmlType="button" disabled={!canOrder}>
+        <Button
+          data-testid="order-button"
+          onClick={() => void sendOrder()}
+          htmlType="button"
+          disabled={!canOrder}
+        >
           Оформить заказ
         </Button>
       </div>

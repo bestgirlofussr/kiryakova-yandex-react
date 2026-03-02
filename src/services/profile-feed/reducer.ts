@@ -14,7 +14,7 @@ export type ProfileOrdersStore = {
   connectionError: string | null;
 };
 
-const initialState: ProfileOrdersStore = {
+export const initialState: ProfileOrdersStore = {
   status: WEB_SOCKET_STATUSES.OFFLINE,
   orders: [],
   connectionError: null,

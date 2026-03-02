@@ -27,7 +27,10 @@ export const Price: React.FC<PriceProps> = ({
   }[size];
 
   return (
-    <div className={`${styles.price} text ${textSizeClass} ${className}`}>
+    <div
+      className={`${styles.price} text ${textSizeClass} ${className}`}
+      data-testid="price"
+    >
       {cost}
       <CurrencyIcon type="primary" className={`ml-2 ${iconSizeClass}`} />
     </div>
